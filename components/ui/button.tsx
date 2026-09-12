@@ -36,13 +36,6 @@ const buttonVariants = cva(
   }
 );
 
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
 export interface ButtonProps
   extends React.ComponentProps<typeof ButtonPrimitive>,
     VariantProps<typeof buttonVariants> {

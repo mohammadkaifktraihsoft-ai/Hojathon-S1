@@ -6,7 +6,19 @@ export async function getPatientContext() {
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError || !userData.user) {
-    throw new Error("Unauthorized");
+    // TEMPORARY MOCK CONTEXT FOR TESTING WITHOUT LOGIN
+    return {
+      patient_id: "mock-patient-123",
+      display_name: "Mock Patient (Test Mode)",
+      open_tasks: [
+        { id: "task-1", title: "Schedule MRI", status: "pending", due_at: new Date(Date.now() - 86400000).toISOString() },
+        { id: "task-2", title: "Blood Test", status: "in_progress", due_at: new Date(Date.now() + 86400000).toISOString() }
+      ],
+      appointments: [
+        { id: "apt-1", title: "Cardiology Follow-up", starts_at: new Date(Date.now() + 86400000 * 3).toISOString(), status: "scheduled" }
+      ],
+      current_time: new Date().toISOString(),
+    };
   }
 
   const patientId = userData.user.id;

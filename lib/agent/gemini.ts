@@ -160,11 +160,15 @@ Do not invent facts; rely on the provided context or tools.`;
     };
   } catch (error: any) {
     console.error("Gemini runtime error:", error);
+    let errorMsg = "An error occurred while communicating with the AI agent. Please try again.";
+    if (error.message && (error.message.includes("API key not valid") || error.message.includes("API key not provided") || error.message.includes("API_KEY_INVALID"))) {
+      errorMsg = "Gemini AI is not configured. Please add GEMINI_API_KEY to .env.local.";
+    }
     return {
       response: null,
       actions: executedActions,
       contextUpdated,
-      error: "An error occurred while communicating with the AI agent. Please try again."
+      error: errorMsg
     };
   }
 }

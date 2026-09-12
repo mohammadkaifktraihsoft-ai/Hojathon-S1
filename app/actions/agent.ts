@@ -6,7 +6,7 @@ import { processAgentChat } from "@/lib/agent/gemini";
 // Helper for safe error responses
 function mapSafeError(errorMsg: string) {
   if (errorMsg === "Unauthorized") return "You must be logged in to use the agent.";
-  if (errorMsg.includes("Gemini AI is not configured")) return "Gemini AI is not configured. Please add GEMINI_API_KEY to the environment.";
+  if (errorMsg.includes("Gemini AI is not configured")) return "Gemini AI is not configured. Please add GEMINI_API_KEY to .env.local.";
   if (errorMsg.startsWith("Database error")) return "Failed to retrieve necessary patient data. Please try again later.";
   return "An unexpected error occurred.";
 }

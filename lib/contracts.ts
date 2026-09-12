@@ -1,7 +1,10 @@
 export type FollowUpStatus = "pending" | "in_progress" | "completed" | "cancelled";
 export type AppointmentStatus = "scheduled" | "missed" | "rescheduled" | "completed" | "cancelled";
 export type ReminderStatus = "pending" | "sent" | "dismissed";
-export type AgentAction = "get_follow_up_status" | "list_upcoming_appointments" | "update_follow_up_status" | "create_reminder";
+export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
+export type BloodAvailabilityStatus = "available" | "limited" | "unavailable";
+export type AgentAction = "get_follow_up_status" | "list_upcoming_appointments" | "update_follow_up_status" | "create_reminder" | "get_blood_availability";
+export const BLOOD_GROUPS: BloodGroup[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 export interface PatientProfile {
   id: string;
@@ -40,6 +43,9 @@ export interface Reminder {
   status: ReminderStatus;
   created_at: string;
 }
+
+export interface Hospital { id: string; name: string; location: string; contact_phone: string | null; }
+export interface BloodInventory { id: string; hospital_id: string; blood_group: BloodGroup; availability: BloodAvailabilityStatus; units: number | null; updated_at: string; hospital?: Hospital; }
 
 export interface PatientContext {
   profile: PatientProfile | null;

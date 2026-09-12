@@ -32,3 +32,6 @@
 
 **Next Steps:**
 - Complete final end-to-end integration by mounting `AgentPanel` into Developer 1's `AgentSlot` on `/dashboard`.
+## Admin portal status
+
+The isolated `feature/admin-portal` branch adds `/admin` dashboard, patient/follow-up/appointment/reminder views, hospital creation, blood inventory updates, shared migration `003_blood_availability.sql`, and patient/agent blood availability reads. Production verification is pending application of the migration to the shared Supabase project.

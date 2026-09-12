@@ -15,3 +15,6 @@
 - **Supabase Verified**: Fully connected to the shared Supabase project with RLS active.
 - **Contract Aligned**: The audit specifications recorded in `AGENT_DATA_CONTEXT.md` have been fulfilled.
 - **Ready for Dashboard Slot**: Developer 1 can now mount `<AgentPanel onContextUpdated={onContextUpdated} />` inside `AgentSlot`.
+## Admin handoff
+
+Worktree: `C:\Users\Admin\Documents\GitHub\hojathon-admin`; branch: `feature/admin-portal`. Apply `supabase/migrations/003_blood_availability.sql` to the one shared Supabase project, then test an admin login, a patient login, inventory update propagation, RLS denial, and `get_blood_availability` through the agent. The patient workspace files were intentionally left untouched.

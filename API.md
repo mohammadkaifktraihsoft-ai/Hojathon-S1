@@ -16,3 +16,12 @@ It accepts validated message history and message string, and returns:
 `{ success: boolean, response?: string, actions?: any[], contextUpdated?: boolean, error?: string }`
 
 It securely validates the user session, queries deterministic context, catches database errors securely without exposing stack traces, and manages function calls to the allowed tools (including multiple parallel tools if requested by Gemini in a single pass).
+## Admin and blood availability
+
+- `GET /blood-availability` — authenticated patient read of hospital inventory.
+- `GET /admin/*` — authenticated admin-only views.
+- `updateBloodInventory` — server action; validates UUID, availability, and non-negative integer units.
+- `createHospital` — server action; validates required hospital fields.
+- `get_blood_availability` — Gemini allow-listed read tool; optional `bloodGroup` filter.
+
+Admin writes require the JWT app metadata role `admin` and are protected again by Supabase RLS.

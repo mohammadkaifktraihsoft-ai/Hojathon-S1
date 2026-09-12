@@ -118,3 +118,6 @@ Before merging the two feature branches, agree on these items only:
 - the single shared Supabase project, migrations, RLS ownership rules, and environment variable names.
 
 The next implementation step is integration cleanup and contract verification, beginning with removal of temporary mocks and restoration of the malformed working-tree files, followed by authenticated end-to-end testing against real shared Supabase data.
+## Blood availability context
+
+Blood inventory is live application data from the shared `blood_inventory` and `hospitals` tables. Patients can read it only after authentication; administrators update it through `/admin/blood-availability`. The agent may call only `get_blood_availability`, which validates the optional blood group and invokes the server-side helper. It cannot access Supabase directly.

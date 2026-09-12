@@ -3,6 +3,7 @@ import { getGeminiClient, DEFAULT_MODEL } from "@/lib/gemini/server";
 import { Type, Tool } from "@google/genai";
 import { getFollowUpStatus, listUpcomingAppointments, updateFollowUpStatus, createReminder } from "./tools";
 import { FollowUpStatus } from "@/lib/contracts";
+import { getBloodAvailability } from "@/lib/blood/data";
 
 // Safety check function
 function isUnsupportedMedicalRequest(text: string): boolean {
@@ -12,6 +13,11 @@ function isUnsupportedMedicalRequest(text: string): boolean {
 
 const tools: Tool[] = [{
   functionDeclarations: [
+    {
+      name: "get_blood_availability",
+      description: "Reads current administrative blood inventory availability for the authenticated patient.",
+      parameters: { type: Type.OBJECT, properties: { bloodGroup: { type: Type.STRING, description: "Optional blood group such as O+ or AB-" } } },
+    },
     {
       name: "get_follow_up_status",
       description: "Gets the current follow-up tasks and their status for the authenticated patient.",
@@ -124,6 +130,8 @@ Do not invent facts; rely on the provided context or tools.`;
         } else if (call.name === "create_reminder") {
           actionResult = await createReminder(args.taskId, args.remindAt);
           if (actionResult.success) contextUpdated = true;
+        } else if (call.name === "get_blood_availability") {
+          actionResult = await getBloodAvailability(args.bloodGroup as string | undefined);
         } else {
           actionResult = { error: "Unknown tool call" };
         }

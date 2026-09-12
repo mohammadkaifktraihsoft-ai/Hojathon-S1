@@ -16,3 +16,7 @@ The system uses a Next.js Server-side architecture to securely integrate Gemini.
 - Gemini DOES NOT access the database directly.
 - All actions are strictly bounded to the authenticated user.
 - The Agent cannot modify clinical info.
+
+## Admin portal
+
+`/admin/*` is an isolated server-rendered area. The layout requires Supabase authentication and `user.app_metadata.role === "admin"`; mutations use server actions and the same authenticated Supabase client, with RLS as the database boundary. Blood inventory is read by patients through `/blood-availability` and by Gemini only through the allow-listed `get_blood_availability` tool. Gemini never receives database credentials or direct database access.

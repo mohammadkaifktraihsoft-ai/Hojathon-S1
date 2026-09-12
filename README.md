@@ -68,6 +68,10 @@ Required variables are documented in [docs/SETUP.md](docs/SETUP.md). The AI Agen
 
 ## Running and testing
 
+### Admin portal
+
+Administrators use the isolated `/admin` portal. It is separate from the patient workspace and requires an authenticated Supabase user whose `app_metadata` contains `{ "role": "admin" }`. Routes cover patients, follow-ups, appointments, reminders, hospitals, and blood inventory. Apply `supabase/migrations/003_blood_availability.sql` in the shared Supabase SQL editor before using blood inventory. All admin authorization is checked server-side and enforced by RLS.
+
 The application implementation is the next build phase. Once initialized:
 
 ```bash

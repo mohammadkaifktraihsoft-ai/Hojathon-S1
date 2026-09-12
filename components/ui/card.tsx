@@ -12,13 +12,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       data-slot="card"
       data-size={size}
       className={cn(
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-2xl border border-slate-200 bg-white py-(--card-spacing) text-sm text-slate-900 shadow-sm ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-2xl border border-slate-200 bg-white py-(--card-spacing) text-sm text-slate-900 shadow-sm ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100",
         className
       )}
       {...props}
     />
   )
 );
+
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -42,7 +43,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
       ref={ref}
       data-slot="card-title"
       className={cn(
-        "text-base font-medium text-lg font-semibold leading-none tracking-tight text-slate-900",
+        "text-base font-medium text-lg font-semibold leading-none tracking-tight text-slate-900 dark:text-white",
         className
       )}
       {...props}
@@ -56,11 +57,12 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
     <p
       ref={ref}
       data-slot="card-description"
-      className={cn("text-sm text-muted-foreground text-slate-500", className)}
+      className={cn("text-sm text-muted-foreground text-slate-500 dark:text-slate-400", className)}
       {...props}
     />
   )
 );
+
 CardDescription.displayName = "CardDescription";
 
 const CardAction = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

@@ -1,3 +1,4 @@
+import "server-only";
 import { createClient } from "@/lib/supabase/server";
 
 export async function getPatientContext() {
@@ -5,20 +6,8 @@ export async function getPatientContext() {
   if (!supabase) throw new Error("Supabase not configured");
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
-  if (userError || !userData.user) {
-    // TEMPORARY MOCK CONTEXT FOR TESTING WITHOUT LOGIN
-    return {
-      patient_id: "mock-patient-123",
-      display_name: "Mock Patient (Test Mode)",
-      open_tasks: [
-        { id: "task-1", title: "Schedule MRI", status: "pending", due_at: new Date(Date.now() - 86400000).toISOString() },
-        { id: "task-2", title: "Blood Test", status: "in_progress", due_at: new Date(Date.now() + 86400000).toISOString() }
-      ],
-      appointments: [
-        { id: "apt-1", title: "Cardiology Follow-up", starts_at: new Date(Date.now() + 86400000 * 3).toISOString(), status: "scheduled" }
-      ],
-      current_time: new Date().toISOString(),
-    };
+  if (userError || !userData?.user) {
+    throw new Error("Unauthorized");
   }
 
   const patientId = userData.user.id;
@@ -29,7 +18,7 @@ export async function getPatientContext() {
     .eq("id", patientId)
     .single();
 
-  if (profileError && profileError.code !== 'PGRST116') {
+  if (profileError && profileError.code !== "PGRST116") {
     throw new Error(`Database error fetching profile: ${profileError.message}`);
   }
 
@@ -55,11 +44,22 @@ export async function getPatientContext() {
     throw new Error(`Database error fetching appointments: ${appointmentsError.message}`);
   }
 
+  const { data: reminders, error: remindersError } = await supabase
+    .from("reminders")
+    .select("*")
+    .eq("patient_id", patientId)
+    .order("remind_at", { ascending: true });
+
+  if (remindersError) {
+    throw new Error(`Database error fetching reminders: ${remindersError.message}`);
+  }
+
   return {
     patient_id: patientId,
-    display_name: profile?.display_name || "Unknown",
+    display_name: profile?.display_name || profile?.full_name || "Patient",
     open_tasks: tasks || [],
     appointments: appointments || [],
+    reminders: reminders || [],
     current_time: new Date().toISOString(),
   };
 }

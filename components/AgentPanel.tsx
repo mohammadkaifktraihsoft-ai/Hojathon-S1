@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { sendMessage } from "@/app/actions/agent";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,9 +14,21 @@ type Message = {
   parts: { text: string }[];
 };
 
-export function AgentPanel() {
+export interface AgentPanelProps {
+  onContextUpdated?: () => void;
+}
+
+export function AgentPanel({ onContextUpdated }: AgentPanelProps = {}) {
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([
-    { role: "model", parts: [{ text: "Hello! I am your Follow-up Care Agent. How can I help you today? E.g., 'What are my next steps?' or 'I missed my appointment.'" }] }
+    {
+      role: "model",
+      parts: [
+        {
+          text: "Hello! I am your Follow-up Care Agent. How can I help you today? E.g., 'What are my next steps?' or 'I missed my appointment.'",
+        },
+      ],
+    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,26 +51,26 @@ export function AgentPanel() {
 
     try {
       const result = await sendMessage(messages, text);
-      
+
       if (result.success && result.response) {
         setMessages((prev) => [
           ...prev,
-          { role: "model", parts: [{ text: result.response as string }] }
+          { role: "model", parts: [{ text: result.response as string }] },
         ]);
         if (result.contextUpdated) {
-          // Future integration: Notify Developer 1's dashboard to refresh data
-          console.log("Context updated! Dashboard should refresh.");
+          onContextUpdated?.();
+          router.refresh();
         }
       } else {
         setMessages((prev) => [
           ...prev,
-          { role: "model", parts: [{ text: `Error: ${result.error || "Failed to process request."}` }] }
+          { role: "model", parts: [{ text: `Error: ${result.error || "Failed to process request."}` }] },
         ]);
       }
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { role: "model", parts: [{ text: "Network error. Please try again later." }] }
+        { role: "model", parts: [{ text: "Network error. Please try again later." }] },
       ]);
     } finally {
       setIsLoading(false);
@@ -72,27 +85,31 @@ export function AgentPanel() {
           Follow-up AI Agent
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full p-4" ref={scrollRef}>
           <div className="flex flex-col gap-4">
             {messages.map((msg, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`flex gap-3 max-w-[85%] ${
                   msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
                 }`}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                  msg.role === "user" ? "bg-muted text-muted-foreground" : "bg-primary text-primary-foreground"
-                }`}>
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                    msg.role === "user" ? "bg-muted text-muted-foreground" : "bg-primary text-primary-foreground"
+                  }`}
+                >
                   {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
                 </div>
-                <div className={`rounded-lg p-3 ${
-                  msg.role === "user" 
-                    ? "bg-primary text-primary-foreground" 
-                    : "bg-muted text-foreground"
-                }`}>
+                <div
+                  className={`rounded-lg p-3 ${
+                    msg.role === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-foreground"
+                  }`}
+                >
                   <p className="text-sm whitespace-pre-wrap">{msg.parts[0].text}</p>
                 </div>
               </div>
@@ -113,15 +130,15 @@ export function AgentPanel() {
       </CardContent>
 
       <CardFooter className="p-3 bg-card border-t">
-        <form 
+        <form
           className="flex w-full gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             handleSend(input);
           }}
         >
-          <Input 
-            placeholder="Type a message..." 
+          <Input
+            placeholder="Type a message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}

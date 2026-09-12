@@ -168,7 +168,12 @@ export default async function HomePage() {
 
       <aside className="mx-auto mt-10 w-full max-w-5xl px-4 pb-12 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <AgentPanel />
+          <div className="mb-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-800 border border-amber-200">
+            <strong>Developer Testing Surface (Non-Production Placement):</strong> This landing-page instance is mounted for standalone component preview. For real authenticated patient records and synchronized workspace metrics, sign in to the <Link href="/login" className="underline font-semibold">Patient Workspace</Link>.
+          </div>
+          <div className="flex justify-center">
+            <AgentPanel />
+          </div>
         </div>
       </aside>
 

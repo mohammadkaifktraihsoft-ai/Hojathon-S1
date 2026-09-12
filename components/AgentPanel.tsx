@@ -37,17 +37,21 @@ export function AgentPanel() {
     setIsLoading(true);
 
     try {
-      const response = await sendMessage(messages, text);
+      const result = await sendMessage(messages, text);
       
-      if (response.success && response.text) {
+      if (result.success && result.response) {
         setMessages((prev) => [
           ...prev,
-          { role: "model", parts: [{ text: response.text as string }] }
+          { role: "model", parts: [{ text: result.response as string }] }
         ]);
+        if (result.contextUpdated) {
+          // Future integration: Notify Developer 1's dashboard to refresh data
+          console.log("Context updated! Dashboard should refresh.");
+        }
       } else {
         setMessages((prev) => [
           ...prev,
-          { role: "model", parts: [{ text: `Error: ${response.error || "Failed to process request."}` }] }
+          { role: "model", parts: [{ text: `Error: ${result.error || "Failed to process request."}` }] }
         ]);
       }
     } catch (error) {
